@@ -10,6 +10,9 @@ height = 250
 obstacle_clearance = 10
 robot_radius = 10
 
+# Stepsize
+step_size = 1
+
 def ObstacleMap(width, height):
     map = np.full((height, width), 0)
     for y in range(height):
@@ -83,6 +86,40 @@ def ObstacleMap(width, height):
     map[:height, width - (obstacle_clearance+robot_radius):width] = 1
 
     return map
+
+# Action Sets
+# returns x , y and theta
+def Actionmove_ac60(x, y, theta):
+    theta = (theta + 60) % 360
+    x += round(step_size * np.cos(np.radians(theta)))
+    y += round(step_size * np.sin(np.radians(theta)))
+    return x, y, theta
+
+def Actionmove_ac30(x,y,theta):
+    theta = (theta + 30) % 360
+    x += round(step_size * np.cos(np.radians(theta)))
+    y += round(step_size * np.sin(np.radians(theta)))
+    return x, y, theta
+
+def Actionmove_forward(x,y,theta):
+    theta = (theta) % 360
+    x += round(step_size * np.cos(np.radians(theta)))
+    y += round(step_size * np.sin(np.radians(theta)))
+    return x, y, theta
+
+def Actionmove_c30(x,y,theta):
+    theta = (theta - 30) % 360
+    x += round(step_size * np.cos(np.radians(theta)))
+    y += round(step_size * np.sin(np.radians(theta)))
+    return x, y, theta
+
+def Actionmove_c60(x,y,theta):
+    theta = (theta - 60) % 360
+    x += round(step_size * np.cos(np.radians(theta)))
+    y += round(step_size * np.sin(np.radians(theta)))
+    return x, y, theta
+
+actions = [Actionmove_forward, Actionmove_c30, Actionmove_c60, Actionmove_ac30, Actionmove_ac60]
 
 def plot(obstacle_map):
     plt.imshow(obstacle_map,"PuBu")
