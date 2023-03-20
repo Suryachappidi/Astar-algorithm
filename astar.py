@@ -191,9 +191,23 @@ def A_star(start, goal, map, actions, step_size):
     print('Goal not reachable!')
     return None
 
-def plot(obstacle_map):
-    plt.imshow(obstacle_map,"PuBu")
-    plt.show()
+def plot(start, goal, path, all_nodes, obstacle_map):
+    plt.figure()
+    plt.plot(start[1], start[0], "Dg")
+    plt.plot(goal[1], goal[0], "Dr")
 
-obstacle_map = ObstacleMap(width, height)
-plot(obstacle_map)
+    plt.imshow(obstacle_map, "PuBu")
+    ax = plt.gca()
+    ax.invert_yaxis()  # y-axis inversion
+
+    for point in all_nodes:
+        plt.plot(point[1], point[0], ".", color="black")
+        #plt.pause(0.000000001)
+
+    for i in range(len(path)):
+        plt.plot(path[i][1], path[i][0], ".", color="red")
+        #plt.pause(0.000000001)
+
+    plt.show()
+    plt.pause(3)
+    plt.close('all')
