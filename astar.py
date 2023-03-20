@@ -82,7 +82,7 @@ def ObstacleMap(width, height):
     return map
 
 # Action Sets
-# returns change in x , y and returns cost
+# returns x , y and theta
 def Actionmove_ac60(x, y, theta):
     theta = (theta + 60) % 360
     x += round(step_size * np.cos(np.radians(theta)))
