@@ -6,13 +6,6 @@ import heapq
 width = 600
 height = 250
 
-#Clearances
-obstacle_clearance = 10
-robot_radius = 10
-
-# Stepsize
-step_size = 1
-
 def ObstacleMap(width, height):
     map = np.full((height, width), 0)
     for y in range(height):
@@ -211,3 +204,57 @@ def plot(start, goal, path, all_nodes, obstacle_map):
     plt.show()
     plt.pause(3)
     plt.close('all')
+    
+# checking if input coordinates are valid
+def is_valid(x, y, theta, obstacle_map):
+    return (0 <= x < obstacle_map.shape[1] and 0 <= y < obstacle_map.shape[0] and obstacle_map[y][x] not in [1, 2] and (theta % 30) == 0)
+
+#Clearance and robot radius input.
+obstacle_clearance = int(input("Enter Obstacle Clearance: "))
+robot_radius = int(input("Enter the robot-radius: "))
+
+# Stepsize
+step_size = int(input("Enter the robot step-size: "))
+
+# generating map based on the clearances and robot radius
+obstacle_map = ObstacleMap(width, height)
+
+# Taking valid Start Node
+start_coord = input("Enter start coordinates as x,y,theta: ")
+start_x, start_y, start_theta = start_coord.split(',')
+start_x = int(start_x)
+start_y = int(start_y)
+start_theta = int(start_theta)
+if(start_theta == 360):
+    start_theta = 0
+if is_valid(start_x, start_y, start_theta, obstacle_map):
+    start = (start_y, start_x, start_theta)
+else:
+    print("Invalid start node or Node is in Obstacle space")
+    exit(-1)
+
+# Taking valid Goal Node
+goal_coordinates = input("Enter goal coordinates as x,y,theta: ")
+goal_x, goal_y, goal_theta = goal_coordinates.split(',')
+goal_x = int(goal_x)
+goal_y = int(goal_y)
+goal_theta = int(goal_theta)
+if(goal_theta == 360):
+    goal_theta = 0
+if is_valid(goal_x, goal_y, goal_theta, obstacle_map):
+    goal = (goal_y, goal_x, goal_theta)
+else:
+    print("Invalid goal node or Node is in Obstacle space")
+    exit(-1)
+
+start_time = time.time()
+try:
+    all_nodes, path = A_star(start, goal, obstacle_map, actions, step_size)
+    end_time = time.time()
+    total_time = end_time - start_time
+    print("The Total Runtime for A-star is:  ", total_time)
+    plot(start, goal, path, all_nodes, obstacle_map)
+except:
+    end_time = time.time()
+    total_time = end_time - start_time
+    print("The Total Runtime for A-star is:  ", total_time)
