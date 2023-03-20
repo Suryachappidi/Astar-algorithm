@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import heapq
+from queue import PriorityQueue
+import time
 
 # Dimensions of the map
 width = 600
@@ -81,7 +82,7 @@ def ObstacleMap(width, height):
     return map
 
 # Action Sets
-# returns x , y and theta
+# returns change in x , y and returns cost
 def Actionmove_ac60(x, y, theta):
     theta = (theta + 60) % 360
     x += round(step_size * np.cos(np.radians(theta)))
@@ -113,22 +114,6 @@ def Actionmove_c60(x,y,theta):
     return x, y, theta
 
 actions = [Actionmove_forward, Actionmove_c30, Actionmove_c60, Actionmove_ac30, Actionmove_ac60]
-
-def compute_neighbours(map, node, actions, step_size):
-    height, width = map.shape
-    neighbours = []
-    y, x, theta = node
-
-    for action in actions:
-        new_x, new_y, new_theta = action(x, y, theta)
-        # Check if generated nodes are not an obstacle
-        if 0 <= new_x < width and 0 <= new_y < height and map[new_y, new_x] == 0:
-            neighbours.append((new_y, new_x, new_theta))
-
-    return neighbours
-
-def euclidean_distance(a, b):
-    return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
 
 def A_star(start, goal, map, actions, step_size):
     open_list = PriorityQueue()
@@ -184,6 +169,22 @@ def A_star(start, goal, map, actions, step_size):
     print('Goal not reachable!')
     return None
 
+def euclidean_distance(a, b):
+    return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+
+def compute_neighbours(map, node, actions, step_size):
+    height, width = map.shape
+    neighbours = []
+    y, x, theta = node
+
+    for action in actions:
+        new_x, new_y, new_theta = action(x, y, theta)
+        # Check if generated nodes are not an obstacle
+        if 0 <= new_x < width and 0 <= new_y < height and map[new_y, new_x] == 0:
+            neighbours.append((new_y, new_x, new_theta))
+
+    return neighbours
+
 def plot(start, goal, path, all_nodes, obstacle_map):
     plt.figure()
     plt.plot(start[1], start[0], "Dg")
@@ -204,7 +205,7 @@ def plot(start, goal, path, all_nodes, obstacle_map):
     plt.show()
     plt.pause(3)
     plt.close('all')
-    
+
 # checking if input coordinates are valid
 def is_valid(x, y, theta, obstacle_map):
     return (0 <= x < obstacle_map.shape[1] and 0 <= y < obstacle_map.shape[0] and obstacle_map[y][x] not in [1, 2] and (theta % 30) == 0)
@@ -258,3 +259,4 @@ except:
     end_time = time.time()
     total_time = end_time - start_time
     print("The Total Runtime for A-star is:  ", total_time)
+
