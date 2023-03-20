@@ -1,5 +1,12 @@
 # A-star Algorithm
 
+### Node Exploration and Optimal path plotting
+
+
+https://user-images.githubusercontent.com/58464605/226481085-46d79c1d-44e2-4197-b9ee-66cb8e66d08b.mov
+
+
+
 ### Dependencies 
 * numpy
 * PriorityQueue
