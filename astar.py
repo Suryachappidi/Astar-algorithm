@@ -140,7 +140,13 @@ def A_star(start, goal, map, actions, step_size):
         if euclidean_distance(current_node, goal) < 1.5 and goal[2] == current_node[2]:
                 current_node == goal
                 print('Goal reached!')
-                
+                # finding the optimal path
+                optimal_path = []
+                while current_node is not None:
+                    optimal_path.append(current_node)
+                    current_node = parent[current_node]
+                optimal_path.reverse()
+                return all_nodes, optimal_path
 
         closed_list.add(current_node)
 
