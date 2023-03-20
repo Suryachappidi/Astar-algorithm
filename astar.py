@@ -121,6 +121,57 @@ def Actionmove_c60(x,y,theta):
 
 actions = [Actionmove_forward, Actionmove_c30, Actionmove_c60, Actionmove_ac30, Actionmove_ac60]
 
+def euclidean_distance(a, b):
+    return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+
+def A_star(start, goal, map, actions, step_size):
+    open_list = PriorityQueue()
+    open_list.put((0, start))
+    cost_to_come = {start: 0}
+    parent = {start: None}
+    closed_list = set()
+    all_nodes = []
+
+    while not open_list.empty():
+
+        current_cost, current_node = open_list.get()
+
+        # checking if robot reached the goal
+        if euclidean_distance(current_node, goal) < 1.5 and goal[2] == current_node[2]:
+                current_node == goal
+                print('Goal reached!')
+                
+
+        closed_list.add(current_node)
+
+        # computing valid neighbours based on actions
+        neighbors = compute_neighbours(map, current_node, actions, step_size)
+
+        for neighbor in neighbors:
+
+            # calculating cost to come to the neighbor
+            cost_to_come_temp = cost_to_come[current_node]
+
+            # checking if it's in closed list
+            if neighbor in closed_list:
+                continue
+
+            # checking if it's in open list with best cost
+            if neighbor in cost_to_come and cost_to_come_temp >= cost_to_come[neighbor]:
+                continue
+
+            # adding it to open list with total cost
+            cost_to_come[neighbor] = cost_to_come_temp
+            total_cost = cost_to_come_temp + euclidean_distance(neighbor, goal)
+            open_list.put((total_cost, neighbor))
+            parent[neighbor] = current_node
+
+            all_nodes.append(neighbor)
+
+    # return none when goal is not reachable
+    print('Goal not reachable!')
+    return None
+
 def plot(obstacle_map):
     plt.imshow(obstacle_map,"PuBu")
     plt.show()
